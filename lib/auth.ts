@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { NextAuthOptions } from "next-auth"
+import { NextAuthOptions, User } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "./prisma";
 import { compare } from "bcrypt";
@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email", placeholder: "Your email" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials) {
+            async authorize(credentials, req): Promise<User | null> {
                 if (!credentials?.email || !credentials?.password) {
                     return null
                 }
@@ -40,9 +40,11 @@ export const authOptions: NextAuthOptions = {
                     return null
                 }
 
+                const username = existingUser.username || ""
+
                 return {
                     id: `${existingUser.id}`,
-                    username: existingUser.username,
+                    username: username,
                     email: existingUser.email
                 }
             }
