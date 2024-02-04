@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { hash } from "bcrypt"
-import db from "../../../../lib/prisma";
+import db from "@/lib/prisma";
 
 export async function POST(req: Request) {
     try {
@@ -9,6 +9,17 @@ export async function POST(req: Request) {
         if(!email || !password || !username) {
             return NextResponse.json({ user: null, message: "Invalid Input!" }, { status: 409 })
         }
+
+        const existingUserName = await db.user.findUnique({
+            where: {
+                username: username 
+            }
+        })
+
+        if (existingUserName) {
+            return NextResponse.json({ user: null, message: "Username already in use!" }, { status: 409 })
+        }
+
         const existingUserByEmail = await db.user.findUnique({
             where: {
                 email: email 

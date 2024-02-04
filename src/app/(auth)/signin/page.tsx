@@ -6,29 +6,34 @@ import { signIn } from "next-auth/react";
 const SignInForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onSignIn = async (e: { preventDefault: () => void; }) => {
+  const onSignIn = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
+    setError("");
     const signInData = await signIn("credentials", {
       email: email,
       password: password,
-      redirect: false
+      redirect: false,
     });
 
-    if(signInData?.status === 200){
-      router.push("/home");
-      console.log(signInData)
-    }else {
+    if (signInData?.status === 200) {
+      router.push("/");
+      router.refresh();
       console.log(signInData);
+    } else {
+      if (signInData?.status === 401) {
+        setError("Invalid Email or Password!");
+      }
     }
-
+    setLoading(false);
   };
 
   return (
-    <section className="gradient-form bg-gray-200 h-screen">
+    <section className=" gradient-form bg-gray-200 h-screen">
       <div className="container mx-auto py-12 px-6 h-full">
         <div className=" flex justify-center items-center flex-wrap h-full g-6 text-gray-800 ">
           <div className="">
@@ -61,12 +66,15 @@ const SignInForm = () => {
                           onChange={(e) => setPassword(e.target.value)}
                         />
                       </div>
+                      <p className="pb-2 text-red-500 text-sm text-center">
+                        {error}
+                      </p>
                       <div className="text-center pt-1 mb-12 pb-1">
                         <button
                           type="submit"
                           className="inline-block px-6 py-2 border-2 border-green-600 text-white bg-green-600 font-medium text-xs leading-tight uppercase rounded  hover:bg-opacity-75 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-full"
                         >
-                       {loading ? "Loading..." :"Log In"}   
+                          {loading ? "Loading..." : "Log In"}
                         </button>
                       </div>
                       <div className="flex items-center justify-between pb-6">

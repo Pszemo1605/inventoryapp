@@ -10,10 +10,13 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model Product {
+model Item {
   id        String  @id @default(cuid())
   title     String
-  content   String?
+  description   String?
+  quantity  String
+  image String
+  category String
   published Boolean @default(false)
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
@@ -21,12 +24,12 @@ model Product {
 
 model User {
   id        String    @id @default(cuid())
-  username      String?
+  username  String?   @unique
   email     String?   @unique
   password  String
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")
-  products  Product[]
+  items  Item[]
 
   @@map(name: "users")
 }
