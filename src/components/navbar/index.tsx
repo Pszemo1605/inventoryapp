@@ -27,7 +27,7 @@ export default function Navbar () {
           <li>
             <a
               href="/add"
-              className=" p-2 text-black rounded-sm hover:bg-opacity-75"
+              className=" p-2 text-white rounded-sm hover:bg-opacity-75"
             >
               Add Item
             </a>

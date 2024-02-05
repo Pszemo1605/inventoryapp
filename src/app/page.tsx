@@ -92,9 +92,9 @@ const Home = () => {
             className="shadow appearance-none border rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           >
             <option value="">Select a category</option>
-            <option value="Raw Materials">Raw Materials</option>
-            <option value="Finished Goods">Finished Goods</option>
-            <option value="Tools and Equipment">Packaging Materials</option>
+            <option value="furniture">furniture</option>
+            <option value="electronic">electronic</option>
+            <option value="item">item</option>
           </select>
             </div>
           {loading ? (
