@@ -45,16 +45,16 @@ const SignUpForm = () => {
                   <div className="p-4 py-5 md:p-12 md:mx-6">
                     <div className="text-center">
                       <h4 className="text-xl font-semibold mt-1 mb-5 pb-1">
-                        Inventory Management System
+                        System zarządzania inwentarzem
                       </h4>
                     </div>
                     <form onSubmit={onSubmit}>
-                      <p className="mb-4 text-center">Create a new account!</p>
+                      <p className="mb-4 text-center">Stwórz nowe konto!</p>
                       <div className="mb-4">
                         <input
                           type="text"
                           className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          placeholder="Full Name"
+                          placeholder="Imię"
                           name="fullName"
                           onChange={(e) => setFullName(e.target.value)}
                         />
@@ -63,7 +63,7 @@ const SignUpForm = () => {
                         <input
                           type="email"
                           className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          placeholder="Your Email"
+                          placeholder="Twój email"
                           name="userEmail"
                           onChange={(e) => setEmail(e.target.value)}
                         />
@@ -72,7 +72,7 @@ const SignUpForm = () => {
                         <input
                           type="password"
                           className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          placeholder="Password"
+                          placeholder="Hasło"
                           name="pin"
                           onChange={(e) => setPassword(e.target.value)}
                         />
@@ -83,17 +83,17 @@ const SignUpForm = () => {
                           type="submit"
                           className="inline-block px-6 py-2 border-2 border-green-600 text-white bg-green-600 font-medium text-xs leading-tight uppercase rounded  hover:bg-opacity-75 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-full"
                         >
-                       {loader? "Loading.." : "Signup"}   
+                       {loader? "Ładowanie.." : "Signup"}   
                         </button>
                       </div>
                       <div className="flex items-center justify-between pb-6">
-                        <p className="mb-0 mr-2">Already have an account?</p>
+                        <p className="mb-0 mr-2">Posiadasz już konto?</p>
                         <button
                           type="button"
                           onClick={() => router.push("/signin")}
                           className="inline-block px-6 py-2 border-2 border-green-600 text-green-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
                         >
-                          Login
+                          Logowanie
                         </button>
                       </div>
                     </form>

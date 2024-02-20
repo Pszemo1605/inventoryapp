@@ -26,7 +26,7 @@ const SignInForm = () => {
       console.log(signInData);
     } else {
       if (signInData?.status === 401) {
-        setError("Invalid Email or Password!");
+        setError("Złe hasło!");
       }
     }
     setLoading(false);
@@ -43,16 +43,16 @@ const SignInForm = () => {
                   <div className="p-4 py-5 md:p-12 md:mx-6">
                     <div className="text-center">
                       <h4 className="text-xl font-semibold mt-1 mb-12 pb-1">
-                        Inventory Management System
+                        System zarządzania inwentarzem
                       </h4>
                     </div>
                     <form onSubmit={onSignIn}>
-                      <p className="mb-4 text-center">Wellcome Back!</p>
+                      <p className="mb-4 text-center">Witamy spowrotem!</p>
                       <div className="mb-4">
                         <input
                           type="email"
                           className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          placeholder="Your Email"
+                          placeholder="Twój mail"
                           name="userEmail"
                           onChange={(e) => setEmail(e.target.value)}
                         />
@@ -61,7 +61,7 @@ const SignInForm = () => {
                         <input
                           type="password"
                           className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          placeholder="Password"
+                          placeholder="Hasło"
                           name="pin"
                           onChange={(e) => setPassword(e.target.value)}
                         />
@@ -74,17 +74,17 @@ const SignInForm = () => {
                           type="submit"
                           className="inline-block px-6 py-2 border-2 border-green-600 text-white bg-green-600 font-medium text-xs leading-tight uppercase rounded  hover:bg-opacity-75 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-full"
                         >
-                          {loading ? "Loading..." : "Log In"}
+                          {loading ? "Ładowanie..." : "Log In"}
                         </button>
                       </div>
                       <div className="flex items-center justify-between pb-6">
-                        <p className="mb-0 mr-2">Don't have an account?</p>
+                        <p className="mb-0 mr-2">Nie posiadasz konta?</p>
                         <button
                           type="button"
                           onClick={() => router.push("/signup")}
                           className="inline-block px-6 py-2 border-2 border-green-600 text-green-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
                         >
-                          Signup
+                          Rejestracja
                         </button>
                       </div>
                     </form>

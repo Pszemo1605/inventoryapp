@@ -139,18 +139,18 @@ const Home = () => {
                             <button  className="py-2 px-3 text-sm font-medium text-center text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:yellow-red-300"
                               onClick={() => router.push(`/edit/${v.id}`)}
                               >
-                              Edit Item
+                              Edytuj
                             </button>
                             <button
                               className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300"
                               onClick={() => handleDelete(v.id)}
                             >
-                              Delete Item
+                              Usuń pozycje
                             </button>
                           </div>
                         </div>
                         <p className="description">
-                          <span className="font-bold">Description:</span>{" "}
+                          <span className="font-bold">Opis</span>{" "}
                           {v?.description}
                         </p>
                       </div>
@@ -158,7 +158,7 @@ const Home = () => {
                   })}
                 </div>
               ) : (
-                <h1>No Items Available</h1>
+                <h1>Żadnych dostępnych przedmiotów</h1>
               )}
             </div>
           )}
@@ -168,7 +168,7 @@ const Home = () => {
   } else {
     return (
       <div className="h-screen flex items-center justify-center">
-        <h2 className="text-5xl">Unauthorized User</h2>
+        <h2 className="text-5xl">Nieautoryzowany użytkownik</h2>
       </div>
     );
   }

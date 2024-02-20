@@ -67,7 +67,7 @@ const Home = () => {
       console.log(res);
     } else {
       if (res?.status === 401) {
-        setError("Invalid Email or Password!");
+        setError("Zły email lub hasło!");
       }
     }
 
@@ -90,7 +90,7 @@ const Home = () => {
                   htmlFor="image"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  Image
+                  Obraz
                 </label>
                 <input
                   type="file"
@@ -115,7 +115,7 @@ const Home = () => {
                   htmlFor="title"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  Title
+                  Tytuł
                 </label>
                 <input
                   type="text"
@@ -133,7 +133,7 @@ const Home = () => {
                   htmlFor="description"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  Description
+                  Opis
                 </label>
                 <textarea
                   id="description"
@@ -200,7 +200,7 @@ const Home = () => {
   } else {
     return (
       <div className="h-screen flex items-center justify-center">
-        <h2 className="text-5xl">Unauthorized User</h2>
+        <h2 className="text-5xl">Nieautoryzowany użytkownik</h2>
       </div>
     );
   }
