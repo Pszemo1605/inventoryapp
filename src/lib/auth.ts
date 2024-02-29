@@ -8,7 +8,8 @@ export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
     secret: process.env.NEXTAUTH_SECRET,
     session: {
-        strategy: "jwt"
+        strategy: "jwt",
+        maxAge: 60 * 10
     },
     pages: {
         signIn: "/signin"
@@ -70,7 +71,6 @@ export const authOptions: NextAuthOptions = {
                     id: token.sub
                 }
             }
-            return session
         }
     }
 }

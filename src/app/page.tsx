@@ -1,177 +1,135 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components";
 import { useSession } from "next-auth/react";
-
-interface DataItem {
-  id: string;
-  title: string;
-  quantity: number;
-  category: string;
-  description: string;
-  image?: string; // Optional property
-}
+import { Item } from "@prisma/client";
+import { ItemTable } from "@/components/item-table";
+import { ItemRow } from "@/components/item-row";
+import { useDebouncedCallback } from "use-debounce";
+import { translateQuery } from "@/utils";
 
 const Home = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const [userId, setUserId] = useState(session?.user.id || "");
+	const router = useRouter();
+	const { data: session } = useSession();
 
-  console.log(session);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [items, setItems] = useState<Item[]>([]);
 
-  const [category, setCategory] = useState("");
+	const [query, setQuery] = useState("");
+	const [queryError, setQueryError] = useState("");
 
+	const debouncedGetAll = useDebouncedCallback(async () => {
+		try {
+			const response = await fetch(`/api/inv-item/get-all?query=${translateQuery(query)}`, {
+				method: "GET",
+				cache: "no-store",
+			});
 
+			const body = await response.json();
 
-  
-  const getAll = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/inv-item/get-all?id=${userId}&category=${category}`, {
-        method: "GET",
-        cache: "no-store",
-      });
-      const data = await response.json();
-      setData(data.data);
-      console.log(data.data);
-    } catch (e) {
-      console.log(error);
-    }
-    setLoading(false);
-  };
+			if (!response.ok) throw new Error(body?.message);
 
+			setQueryError("");
+			setItems(body.data);
+		} catch (e) {
+			if (e instanceof Error) {
+				setQueryError(e.message);
+			}
+		}
+	}, 400);
 
-  useEffect(() => {
-    getAll();
-  }, [category]);
+	const getAll = async () => {
+		try {
+			setLoading(true);
+			const response = await fetch("/api/inv-item/get-all", {
+				method: "GET",
+				cache: "no-store",
+			});
 
+			const items = await response.json();
+			setItems(items.data);
+		} catch (e) {
+			console.log(e);
+		}
+		setLoading(false);
+	};
 
-  useEffect(() => {
-    if (session?.user?.id) {
-      setUserId(session.user.id);
-    getAll();
+	useEffect(() => {
+		if (session?.user?.id) {
+			getAll();
+		}
+	}, [session]);
 
-    }
-  }, [session]);
+	const handleDelete = async (id: string) => {
+		try {
+			const res = await fetch(`/api/inv-item/delete-item?id=${id}`, {
+				method: "DELETE",
+				cache: "no-store",
+			});
 
+			if (res.status === 200) {
+				router.refresh();
+				getAll();
+			} else {
+				console.log("Invalid Email or Password!");
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await fetch(`/api/inv-item/delete-item?id=${id}`, {
-        method: "DELETE",
-        cache: "no-store",
-      });
+	const handleEdit = (id: string) => {
+		router.push(`/edit/${id}`);
+	};
 
-      if (res.status === 200) {
-        router.refresh();
-    getAll();
+	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+		setQuery(e.target.value);
 
-      } else {
-        console.log("Invalid Email or Password!");
-      }
-    } catch (e) {
-      console.log(error);
-    }
-  };
+		debouncedGetAll();
+	};
 
-  if (session?.user) {
-    return (
-      <>
-        <Navbar />
-        <div className="min-h-screen pt-24">
-          <div className="max-w-[500px] mx-auto">
-          <select
-            id="category"
-            name="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="shadow appearance-none border rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option value="">Select a category</option>
-            <option value="furniture">furniture</option>
-            <option value="electronic">electronic</option>
-            <option value="item">item</option>
-          </select>
-            </div>
-          {loading ? (
-            <div className="h-screen flex items-center justify-center">
-              <h2 className="text-5xl">loading items!</h2>
-            </div>
-          ) : (
-            <div className="container mx-auto p-5">
-              {data !== undefined ? (
-                <div>
-                  {data.map((v: DataItem, i: number) => {
-                    return (
-                      <div
-                        key={i}
-                        className="p-4 border border-black flex flex-col gap-4 rounded-md mb-4"
-                      >
-                        <div key={i} className="flex items-center gap-4">
-                          <div>
-                            {v.image && (
-                              <img
-                                src={`/assets/${v.image}`}
-                                alt=""
-                                className="h-36 w-36"
-                              />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <p>
-                              <span className="font-bold"> Title: </span>{" "}
-                              {v?.title}
-                            </p>
-                            <p>
-                              <span className="font-bold">Quantity:</span>{" "}
-                              {v?.quantity}
-                            </p>
-                            <p>
-                              <span className="font-bold">Category:</span>{" "}
-                              {v?.category}
-                            </p>
-                          </div>
-                          <div className="flex flex-col gap-4">
-                            <button  className="py-2 px-3 text-sm font-medium text-center text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:yellow-red-300"
-                              onClick={() => router.push(`/edit/${v.id}`)}
-                              >
-                              Edytuj
-                            </button>
-                            <button
-                              className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300"
-                              onClick={() => handleDelete(v.id)}
-                            >
-                              Usuń pozycje
-                            </button>
-                          </div>
-                        </div>
-                        <p className="description">
-                          <span className="font-bold">Opis</span>{" "}
-                          {v?.description}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <h1>Żadnych dostępnych przedmiotów</h1>
-              )}
-            </div>
-          )}
-        </div>
-      </>
-    );
-  } else {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <h2 className="text-5xl">Nieautoryzowany użytkownik</h2>
-      </div>
-    );
-  }
+	if (!session?.user) {
+		return (
+			<div className="h-screen flex items-center justify-center">
+				<h2 className="text-5xl">Nieautoryzowany użytkownik</h2>
+			</div>
+		);
+	}
+
+	return (
+		<>
+			<Navbar />
+			<div className="min-h-screen pt-24 w-3/4 mx-auto">
+				<div className="max-w-[500px] mx-auto mb-10">
+					<span>{queryError}</span>
+					<input
+						name="search"
+						type="text"
+						placeholder="Wyszukaj"
+						className="shadow appearance-none border rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						value={query}
+						onChange={handleSearch}
+					/>
+				</div>
+				{loading ? (
+					<div className="h-screen flex items-center justify-center">
+						<h2 className="text-5xl">loading items!</h2>
+					</div>
+				) : (
+					<ItemTable>
+						{items === undefined && (
+							<tr>
+								<th scope="row">Brak dostępnych przedmiotów</th>
+							</tr>
+						)}
+						{items !== undefined &&
+							items.map((item) => <ItemRow key={item.id} item={item} onDelete={handleDelete} onEdit={handleEdit} />)}
+					</ItemTable>
+				)}
+			</div>
+		</>
+	);
 };
 
 export default Home;

@@ -1,7 +1,5 @@
 import db from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import { unlink } from "fs/promises";
 
 export async function GET(req: NextRequest) {
     try {

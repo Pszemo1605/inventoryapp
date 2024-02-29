@@ -13,13 +13,15 @@ datasource db {
 model Item {
   id        String  @id @default(cuid())
   title     String
+  place     String  @default("")
   description   String?
-  quantity  String
   image String
   category String
   published Boolean @default(false)
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  replacementDate DateTime? @map(name: "replacement_date")
 }
 
 model User {
